@@ -21,22 +21,32 @@
 		<div class="markdown pane flex-column">
 			<div class="flex-between">
 				<h2>Markdown</h2>
-				<button id="spellcheck">Spellcheck</button>
 				<p>Press <code>CTRL + ENTER</code> to process</p>
 			</div>
 			<hr>
-			<textarea id="markdown" spellcheck="true" autofocus></textarea>
-			<div class="save">
-				<button id="save-btn">Save</button>
-				<div id="save-menu" class="flex-between">
-					<div>
-						<label for="file-name">Filename:</label>
-						<input id="file-name" type="text" placeholder="some-file-name">
-						<p><em>.md</em></p>
+			<ul class="tools">
+				<li>
+					<input id="wrap" type="checkbox" checked>
+					<label for="wrap">wrap</label>
+				</li>
+				<li>
+					<input id="spellcheck" type="checkbox">
+					<label for="spellcheck">spellcheck</label>
+				</li>
+				<li class="image-insert">
+					<input id="image-insert" class="uploading" type="file" accept="image/jpeg,image/png">
+					<label for="image-insert">uploading...</label>
+					<div class="upload-progress">
+						<progress id="progress" value="70" max="100"></progress>
+						<label for="progress">uploading...</label>
 					</div>
-					<button id="download-btn" disabled>Download</button>
-				</div>
-			</div>
+				</li>
+				<li>
+					<input id="save" type="button">
+					<label for="save">save file</label>
+				</li>
+			</ul>
+			<textarea id="markdown" spellcheck="false" autofocus></textarea>
 		</div>
 		<div class="html-output pane">
 			<h2>HTML</h2>

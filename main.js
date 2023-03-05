@@ -38,33 +38,33 @@ window.addEventListener('load', () => {
 		}
 	});
 
-	let spellcheck = true;
-	const spellcheckButton = document.getElementById('spellcheck');
+	// TOOLS
 
-	const toggleSpellCheck = () => {
-		spellcheck = !spellcheck;
-		spellcheckButton.innerText = spellcheck ? 'Spellcheck ON' : 'Spellcheck OFF';
-		mdInput.spellcheck = spellcheck;
-		mdInput.focus();
-	}
-	toggleSpellCheck();
+	// Spellcheck
+	const spellcheck = document.getElementById('spellcheck');
+	mdInput.spellcheck = spellcheck.checked;
+	spellcheck.addEventListener('input', () => mdInput.spellcheck = spellcheck.checked);
 
-	spellcheckButton.addEventListener('click', toggleSpellCheck);
-
-	const saveButton = document.getElementById('save-btn');
-	const saveMenuContainer = document.getElementById('save-menu');
-	const fileNameInput = document.getElementById('file-name');
-	const downloadButton = document.getElementById('download-btn');
-
-	saveButton.addEventListener('click', () => {
-		saveMenuContainer.style.display = 'flex';
-		saveButton.style.display = 'none';
+	// Wrap
+	const wrap = document.getElementById('wrap');
+	mdInput.wrap = wrap.checked ? 'soft' : 'off';
+	wrap.addEventListener('input', () => {
+		mdInput.wrap = wrap.checked ? 'soft' : 'off';
+		mdInput.scrollTo(0, mdInput.scrollTop);
 	});
 
-	const updateDownloadButton = () => downloadButton.disabled = fileNameInput.value == '';
-	updateDownloadButton();
-	fileNameInput.addEventListener('input', updateDownloadButton);
+	// Image insert
+	const fileInput = document.getElementById('image-insert');
+	fileInput.addEventListener('click', event => {
+		mdInput.focus();
+		console.log('fileInput clicked');
+	});
+	// fileInput.addEventListener('change', () => {
+	// 	console.log(fileInput.value);
+	// 	console.log(fileInput.files);
+	// });
 
+	// Save to file
 	const saveMarkdown = () => {
 		const filename = fileNameInput.value;
 		if (filename == '') return;
@@ -83,5 +83,8 @@ window.addEventListener('load', () => {
 		saveButton.style.display = 'initial';
 	}
 
-	downloadButton.addEventListener('click', saveMarkdown);
+	const saveFile = document.getElementById('save');
+	saveFile.addEventListener('click', () => {
+		console.log('saving');
+	});
 });

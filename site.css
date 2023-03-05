@@ -73,38 +73,108 @@ div.container div.pane {
 div.pane textarea {
 	flex-grow: 1;
 	resize: none;
-	background-color:
+}
+
+div#visual-output {
+	overflow-y: scroll;
+	flex-grow: 1;
 }
 
 textarea#markdown {
 	margin-bottom: 10px;
 }
 
-div.save {
-	height: 40px;
-	display: flex;
-}
-button#save-btn {
-	width: 100%;
-	/* display: none; */
-}
-div#save-menu {
-	display: none;
-	align-items: stretch;
-}
-div#save-menu {
-	flex-grow: 1;
-}
-div#save-menu div {
-	display: flex;
-	align-items: center;
-}
-div.save input {
-	flex-grow: 1;
-	margin: 0 10px;
+div.markdown.pane hr {
+	margin-bottom: 0;
 }
 
-div#visual-output {
-	overflow-y: scroll;
-	flex-grow: 1;
+/* TOOLS */
+
+ul.tools {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin: 10px 0;
+}
+
+ul.tools li {
+	margin: 5px 0;
+}
+
+ul.tools li input, ul.tools li progress {
+	position: absolute;
+	top: auto;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	width: 1px;
+	height: 1px;
+}
+
+ul.tools li label {
+	padding: 3px 10px;
+	display: block;
+	font-family: monospace;
+	cursor: pointer;
+	user-select: none;
+	border-radius: 4px;
+	border: 2px solid var(--dim-text-color);
+}
+
+ul.tools li input:disabled + label {
+	cursor: default;
+	color: var(--dim-text-color);
+	border-color: var(--border-color);
+}
+
+ul.tools li [type="checkbox"]:checked + label {
+	color: var(--pane-color);
+	border-color: var(--text-color);
+	background-color: var(--text-color);
+}
+
+ul.tools li [type="file"]:not(.uploading) + label:hover,
+ul.tools li [type="button"] + label:hover {
+	color: var(--pane-color);
+	border-color: var(--text-color);
+	background-color: var(--text-color);
+}
+
+ul.tools li button {
+	display: none;
+}
+
+ul.tools li.image-insert {
+	width: 130px;
+	display: flex;
+	position: relative;
+	border-radius: 4px;
+	overflow: hidden;
+}
+ul.tools li.image-insert label {
+	width: 100%;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+
+ul.tools li.image-insert div.upload-progress {
+	width: 50%;
+	height: 100%;
+	position: absolute;
+	overflow: hidden;
+	z-index: 1;
+}
+ul.tools li.image-insert div.upload-progress label {
+	width: 130px;
+	height: 100%;
+	cursor: default;
+	overflow: hidden;
+	color: var(--pane-color);
+	background-color: var(--text-color);
+}
+
+ul.tools li [type="file"].uploading + label {
+	cursor: default;
 }
