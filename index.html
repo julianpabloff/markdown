@@ -33,26 +33,39 @@
 					<input id="spellcheck" type="checkbox">
 					<label for="spellcheck">spellcheck</label>
 				</li>
+				<li>
+					<input id="undo" type="button">
+					<label for="undo">undo</label>
+				</li>
 				<li class="image-insert">
-					<input id="image-insert" class="uploading" type="file" accept="image/jpeg,image/png">
-					<label for="image-insert">uploading...</label>
-					<div class="upload-progress">
+					<!-- upload image -->
+					<!-- uploading... -->
+					<!-- click
+					<!-- insert image -->
+					<!-- view images -->
+					<input id="image-insert" type="file" accept="image/jpeg,image/png">
+					<!-- <input id="image-insert" class="uploading" type="file" accept="image/jpeg,image/png"> -->
+					<label for="image-insert">upload image</label>
+					<div id="progress-container" class="upload-progress">
 						<progress id="progress" value="70" max="100"></progress>
 						<label for="progress">uploading...</label>
 					</div>
 				</li>
 				<li>
 					<input id="save" type="button">
-					<label for="save">save file</label>
+					<label for="save">export .md</label>
 				</li>
 			</ul>
 			<textarea id="markdown" spellcheck="false" autofocus></textarea>
+			<!-- <div class="images"> -->
+			<!-- 	<h2>Images</h2> -->
+			<!-- </div> -->
 		</div>
-		<div class="html-output pane">
-			<h2>HTML</h2>
-			<hr>
-			<textarea id="html-output" readonly></textarea>
-		</div>
+		<!-- <div class="html-output pane"> -->
+		<!-- 	<h2>HTML</h2> -->
+		<!-- 	<hr> -->
+		<!-- 	<textarea id="html-output" readonly></textarea> -->
+		<!-- </div> -->
 		<div class="visual-output pane">
 			<h2>Visual Output</h2>
 			<hr>

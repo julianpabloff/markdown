@@ -12,12 +12,12 @@ window.addEventListener('load', () => {
 
 	const processButton = document.getElementById('process-btn');
 	const mdInput = document.getElementById('markdown');
-	const htmlOutput = document.getElementById('html-output');
+	// const htmlOutput = document.getElementById('html-output');
 	const visualOutput = document.getElementById('visual-output');
 
 	const process = () => {
 		const output = marked.parse(mdInput.value);
-		htmlOutput.value = output;
+		// htmlOutput.value = output;
 		visualOutput.innerHTML = output;
 	}
 	process();
@@ -30,20 +30,15 @@ window.addEventListener('load', () => {
 			event.preventDefault();
 			const start = this.selectionStart;
 			const end = this.selectionEnd;
-			console.log(start);
-			console.log(end);
 			this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+			handleMDInputChange();
 			this.selectionEnd = start + 4;
 			this.selectionStart = this.selectionEnd;
 		}
 	});
 
-	// TOOLS
 
-	// Spellcheck
-	const spellcheck = document.getElementById('spellcheck');
-	mdInput.spellcheck = spellcheck.checked;
-	spellcheck.addEventListener('input', () => mdInput.spellcheck = spellcheck.checked);
+	// TOOLS
 
 	// Wrap
 	const wrap = document.getElementById('wrap');
@@ -53,10 +48,53 @@ window.addEventListener('load', () => {
 		mdInput.scrollTo(0, mdInput.scrollTop);
 	});
 
+	// Spellcheck
+	const spellcheck = document.getElementById('spellcheck');
+	mdInput.spellcheck = spellcheck.checked;
+	spellcheck.addEventListener('input', () => mdInput.spellcheck = spellcheck.checked);
+
+	// Undo
+	const history = [mdInput.value];
+	let timer = false;
+	const handleMDInputChange = () => {
+		if (timer) {
+			clearTimeout(timer);
+			timer = false;
+		}
+		timer = setTimeout(() => history.push(mdInput.value), 700);
+	}
+	mdInput.addEventListener('input', handleMDInputChange);
+
+	const undo = document.getElementById('undo');
+	undo.addEventListener('click', () => {
+		if (history.length > 1) {
+			history.pop();
+			mdInput.value = history.at(-1);
+		}
+		mdInput.focus();
+	});
+
 	// Image insert
+	let lastSelectionStart, lastSelectionEnd;
+	mdInput.addEventListener('blur', function() {
+		lastSelectionStart = this.selectionStart;
+		lastSelectionEnd = this.selectionEnd;
+	});
+
 	const fileInput = document.getElementById('image-insert');
 	fileInput.addEventListener('click', event => {
+		mdInput.readOnly = true;
+		mdInput.selectionStart = lastSelectionStart;
+		mdInput.selectionEnd = lastSelectionEnd;
 		mdInput.focus();
+		const preventSelction = event => {
+			event.preventDefault();
+		};
+		mdInput.addEventListener('mousedown', preventSelction);
+		setTimeout(() => {
+			mdInput.readOnly = false;
+			mdInput.removeEventListener('mousedown', preventSelction);
+		}, 3000);
 		console.log('fileInput clicked');
 	});
 	// fileInput.addEventListener('change', () => {

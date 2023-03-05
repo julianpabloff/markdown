@@ -49,9 +49,9 @@ button#dark-mode-toggle span {
 }
 
 div.container {
-	width: 90vw;
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
+	gap: 50px;
 }
 
 .pane {
@@ -64,7 +64,7 @@ div.container {
 }
 
 div.container div.pane {
-	width: 32%;
+	width: 32vw;
 	height: 80vh;
 	display: flex;
 	flex-direction: column;
@@ -141,16 +141,10 @@ ul.tools li [type="button"] + label:hover {
 	background-color: var(--text-color);
 }
 
-ul.tools li button {
-	display: none;
-}
-
 ul.tools li.image-insert {
 	width: 130px;
 	display: flex;
 	position: relative;
-	border-radius: 4px;
-	overflow: hidden;
 }
 ul.tools li.image-insert label {
 	width: 100%;
@@ -160,17 +154,15 @@ ul.tools li.image-insert label {
 }
 
 ul.tools li.image-insert div.upload-progress {
+	display: none;
 	width: 50%;
 	height: 100%;
 	position: absolute;
 	overflow: hidden;
-	z-index: 1;
 }
 ul.tools li.image-insert div.upload-progress label {
 	width: 130px;
-	height: 100%;
 	cursor: default;
-	overflow: hidden;
 	color: var(--pane-color);
 	background-color: var(--text-color);
 }
