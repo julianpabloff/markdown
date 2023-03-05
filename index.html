@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="utf-8"/>
+	<title>markdown</title>
+	<link rel="stylesheet" href="site.css"/>
+	<link rel="stylesheet" href="style.css"/>
+	<link rel="stylesheet" href="woolley-md/woolley-md.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script src="darkmode.js"></script>
+	<script src="main.js"></script>
+</head>
+
+<body>
+	<header class="pane">
+		<h1>Markdown Tool</h1>
+		<button id="process-btn">Process</button>
+		<button id="dark-mode-toggle"></button>
+	</header>
+	<div class="container">
+		<div class="markdown pane flex-column">
+			<div class="flex-between">
+				<h2>Markdown</h2>
+				<button id="spellcheck">Spellcheck</button>
+				<p>Press <code>CTRL + ENTER</code> to process</p>
+			</div>
+			<hr>
+			<textarea id="markdown" spellcheck="true" autofocus></textarea>
+			<div class="save">
+				<button id="save-btn">Save</button>
+				<div id="save-menu" class="flex-between">
+					<div>
+						<label for="file-name">Filename:</label>
+						<input id="file-name" type="text" placeholder="some-file-name">
+						<p><em>.md</em></p>
+					</div>
+					<button id="download-btn" disabled>Download</button>
+				</div>
+			</div>
+		</div>
+		<div class="html-output pane">
+			<h2>HTML</h2>
+			<hr>
+			<textarea id="html-output" readonly></textarea>
+		</div>
+		<div class="visual-output pane">
+			<h2>Visual Output</h2>
+			<hr>
+			<!-- <div id="visual-output" class="md"></div> -->
+			<div id="visual-output" class="woolley-md"></div>
+		</div>
+	</div>
+</body>

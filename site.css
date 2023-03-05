@@ -1,0 +1,110 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+.flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+html {
+	font-size: 16px;
+}
+
+body {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-color);
+	background-color: var(--body-color);
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 40px;
+	width: 500px;
+}
+
+button#dark-mode-toggle {
+	height: 35px;
+	width: 35px;
+	font-size: 30px;
+	padding: 0;
+}
+button#dark-mode-toggle span {
+	position: relative;
+	top: -5px;
+}
+
+div.container {
+	width: 90vw;
+	display: flex;
+	justify-content: space-between;
+}
+
+.pane {
+	padding: 10px;
+	/* background-color: rgba(0, 0, 0, 0.1); */
+	background-color: var(--pane-color);
+	border: 2px solid var(--border-color);
+	border-radius: 5px;
+	overflow-y: hidden;
+}
+
+div.container div.pane {
+	width: 32%;
+	height: 80vh;
+	display: flex;
+	flex-direction: column;
+}
+
+div.pane textarea {
+	flex-grow: 1;
+	resize: none;
+	background-color:
+}
+
+textarea#markdown {
+	margin-bottom: 10px;
+}
+
+div.save {
+	height: 40px;
+	display: flex;
+}
+button#save-btn {
+	width: 100%;
+	/* display: none; */
+}
+div#save-menu {
+	display: none;
+	align-items: stretch;
+}
+div#save-menu {
+	flex-grow: 1;
+}
+div#save-menu div {
+	display: flex;
+	align-items: center;
+}
+div.save input {
+	flex-grow: 1;
+	margin: 0 10px;
+}
+
+div#visual-output {
+	overflow-y: scroll;
+	flex-grow: 1;
+}
