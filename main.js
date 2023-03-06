@@ -77,6 +77,7 @@ window.addEventListener('load', () => {
 	spellcheck.addEventListener('input', () => mdInput.spellcheck = spellcheck.checked);
 
 	// Undo
+	// TODO: highlight the text if a deletion was undone
 	const history = [mdInput.value];
 	let timer = false;
 	const handleMDInputChange = () => {
@@ -84,7 +85,10 @@ window.addEventListener('load', () => {
 			clearTimeout(timer);
 			timer = false;
 		}
-		timer = setTimeout(() => history.push(mdInput.value), 700);
+		timer = setTimeout(() => {
+			history.push(mdInput.value)
+			if (history.length > 1) undo.disabled = false;
+		}, 500);
 	}
 	mdInput.addEventListener('input', handleMDInputChange);
 
@@ -93,10 +97,13 @@ window.addEventListener('load', () => {
 		if (history.length > 1) {
 			history.pop();
 			mdInput.value = history[history.length - 1];
-			mdInput.focus();
+			// TODO: store the cursor position in the undo for this to work
+			// mdInput.focus();
+			if (history.length < 2) undo.disabled = true;
 			process();
-		}
+		} else undo.disabled = true;
 	});
+	undo.disabled = true;
 
 	// Image insert
 	const fileInput = document.getElementById('image-insert');
@@ -123,27 +130,37 @@ window.addEventListener('load', () => {
 	fileInput.addEventListener('click', () => mdInput.focus());
 	fileInput.addEventListener('change', async () => {
 		const file = fileInput.files[0];
+
+		// Disable actions while uploading
 		mdInput.readOnly = true;
 		mdInput.addEventListener('mousedown', preventDefault);
 		uploadLabel.addEventListener('mousedown', preventDefault);
 		fileInput.addEventListener('click', preventDefault);
-
-		uploadLabel.innerText = 'uploading...';
+		wrap.disabled = spellcheck.disabled = undo.disabled = saveFile.disabled = true;
 		fileInput.className = 'uploading';
 
-		await intervalIterate(15, 100, i => {
+		// Display upload progress
+		uploadLabel.innerText = 'uploading...';
+		await intervalIterate(25, 100, i => {
 			progressContainer.style.width = i.toString() + '%';
 		});
+
+		// Upload complete
 		progressContainer.style.width = '0';
 		uploadLabel.innerText = 'upload image';
-		fileInput.className = '';
 		const imageMD = `![alt_text](${file.name})`;
 		insertTextIntoMdInput(imageMD, true);
 
+		// Re-enable actions once uploaded
+		fileInput.className = '';
+		wrap.disabled = spellcheck.disabled = undo.disabled = saveFile.disabled = false;
 		mdInput.removeEventListener('mousedown', preventDefault);
 		uploadLabel.removeEventListener('mousedown', preventDefault);
 		fileInput.removeEventListener('click', preventDefault);
 		mdInput.readOnly = false;
+		mdInput.focus();
+
+		process();
 	});
 
 	// Save to file
@@ -185,10 +202,7 @@ window.addEventListener('load', () => {
 		saveButtonContainer.style.display = 'block';
 	}
 
-	filenameInput.addEventListener('focusout', function() {
-		console.log('filenameInput focusout');
-		closeFilename();
-	});
+	filenameInput.addEventListener('focusout', () => closeFilename());
 
 	const saveMarkdown = () => {
 		const filename = filenameInput.value;
@@ -213,7 +227,7 @@ window.addEventListener('load', () => {
 	});
 
 	filenameInput.addEventListener('keydown', function(event) {
-		console.log(event.keyCode);
+		// TODO: deny certain characters
 		if (event.key == 'Enter' && readyToSave) saveMarkdown();
 	});
 });

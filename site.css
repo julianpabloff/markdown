@@ -130,9 +130,17 @@ ul.tools li [type="checkbox"]:checked + label {
 	border-color: var(--text-color);
 	background-color: var(--text-color);
 }
+ul.tools li [type="checkbox"] + label:hover {
+	border-color: var(--text-color);
+}
+ul.tools li [type="checkbox"]:checked:disabled + label {
+	color: var(--border-color);
+	border-color: var(--dim-text-color);
+	background-color: var(--dim-text-color);
+}
 
-ul.tools li [type="file"]:not(.uploading) + label:hover,
-ul.tools li [type="button"] + label:hover {
+ul.tools li [type="file"]:not(.uploading):not(:disabled) + label:hover,
+ul.tools li [type="button"]:not(:disabled) + label:hover {
 	color: var(--pane-color);
 	border-color: var(--text-color);
 	background-color: var(--text-color);
@@ -162,17 +170,17 @@ ul.tools li.image-insert div.upload-progress label {
 	cursor: default;
 	color: var(--pane-color);
 	background-color: var(--text-color);
+	border-color: var(--text-color);
 }
 
 ul.tools li [type="file"].uploading + label {
 	cursor: default;
+	border-color: var(--text-color);
 }
 
 ul.tools li [type="text"] + label:hover,
 ul.tools li [type="text"]:focus + label {
-	/* color: var(--pane-color); */
 	border-color: var(--text-color);
-	/* background-color: var(--text-color); */
 }
 
 ul.tools li [type="text"] + label.hover-highlight:hover {
