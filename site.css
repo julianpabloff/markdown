@@ -51,7 +51,7 @@ button#dark-mode-toggle span {
 div.container {
 	display: flex;
 	justify-content: center;
-	gap: 50px;
+	gap: 20px;
 }
 
 .pane {
@@ -64,7 +64,8 @@ div.container {
 }
 
 div.container div.pane {
-	width: 32vw;
+	/* width: 30vw; */
+	width: 40vw;
 	height: 80vh;
 	display: flex;
 	flex-direction: column;
@@ -97,10 +98,6 @@ ul.tools {
 	gap: 10px;
 	flex-wrap: wrap;
 	margin: 10px 0;
-}
-
-ul.tools li {
-	margin: 5px 0;
 }
 
 ul.tools li input, ul.tools li progress {
@@ -154,8 +151,8 @@ ul.tools li.image-insert label {
 }
 
 ul.tools li.image-insert div.upload-progress {
-	display: none;
-	width: 50%;
+	/* display: none; */
+	width: 0;
 	height: 100%;
 	position: absolute;
 	overflow: hidden;
@@ -169,4 +166,20 @@ ul.tools li.image-insert div.upload-progress label {
 
 ul.tools li [type="file"].uploading + label {
 	cursor: default;
+}
+
+ul.tools li [type="text"] + label:hover,
+ul.tools li [type="text"]:focus + label {
+	/* color: var(--pane-color); */
+	border-color: var(--text-color);
+	/* background-color: var(--text-color); */
+}
+
+ul.tools li [type="text"] + label.hover-highlight:hover {
+	color: var(--pane-color);
+	border-color: var(--text-color);
+	background-color: var(--text-color);
+}
+li#filename-container {
+	display: none;
 }

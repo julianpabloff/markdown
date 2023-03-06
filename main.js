@@ -10,32 +10,55 @@ window.addEventListener('load', () => {
 		setDMButtonText();
 	});
 
+	// Tips
+	const tip = document.getElementById('tip');
+	const tips = {
+		mdInput: { bind: 'CTRL + ENTER', action: 'process' },
+		filename: { bind: 'ENTER', action: 'save' }
+	}
+	const setTip = tipName => {
+		const tipText = tips[tipName];
+		tip.innerHTML = `press <code>${tipText.bind}</code> to ${tipText.action}`;
+	}
+	const clearTip = () => tip.innerHTML = '';
+
 	const processButton = document.getElementById('process-btn');
 	const mdInput = document.getElementById('markdown');
 	// const htmlOutput = document.getElementById('html-output');
 	const visualOutput = document.getElementById('visual-output');
 
+	// Markdown input
 	const process = () => {
 		const output = marked.parse(mdInput.value);
 		// htmlOutput.value = output;
 		visualOutput.innerHTML = output;
 	}
 	process();
-
 	processButton.addEventListener('click', process);
+
+	const insertTextIntoMdInput = (text, leaveSelected = false) => {
+		const start = mdInput.selectionStart;
+		const end = mdInput.selectionEnd;
+		const textBefore = mdInput.value.substring(0, start);
+		const textAfter = mdInput.value.substring(end);
+		mdInput.value = textBefore + text + textAfter;
+		handleMDInputChange();
+		mdInput.selectionEnd = start + text.length;
+		if (!leaveSelected) mdInput.selectionStart = mdInput.selectionEnd;
+		else mdInput.selectionStart = start;
+	}
 
 	mdInput.addEventListener('keydown', function(event) {
 		if (event.keyCode == 13 && event.ctrlKey) process();
 		else if (event.key == 'Tab') {
 			event.preventDefault();
-			const start = this.selectionStart;
-			const end = this.selectionEnd;
-			this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
-			handleMDInputChange();
-			this.selectionEnd = start + 4;
-			this.selectionStart = this.selectionEnd;
+			insertTextIntoMdInput('    ');
 		}
 	});
+	
+	mdInput.addEventListener('focus', () => setTip('mdInput'));
+	mdInput.addEventListener('blur', clearTip);
+	mdInput.focus();
 
 
 	// TOOLS
@@ -69,60 +92,128 @@ window.addEventListener('load', () => {
 	undo.addEventListener('click', () => {
 		if (history.length > 1) {
 			history.pop();
-			mdInput.value = history.at(-1);
+			mdInput.value = history[history.length - 1];
+			mdInput.focus();
+			process();
 		}
-		mdInput.focus();
 	});
 
 	// Image insert
-	let lastSelectionStart, lastSelectionEnd;
-	mdInput.addEventListener('blur', function() {
-		lastSelectionStart = this.selectionStart;
-		lastSelectionEnd = this.selectionEnd;
-	});
-
 	const fileInput = document.getElementById('image-insert');
-	fileInput.addEventListener('click', event => {
-		mdInput.readOnly = true;
-		mdInput.selectionStart = lastSelectionStart;
-		mdInput.selectionEnd = lastSelectionEnd;
-		mdInput.focus();
-		const preventSelction = event => {
-			event.preventDefault();
-		};
-		mdInput.addEventListener('mousedown', preventSelction);
-		setTimeout(() => {
-			mdInput.readOnly = false;
-			mdInput.removeEventListener('mousedown', preventSelction);
-		}, 3000);
-		console.log('fileInput clicked');
+	const uploadLabel = document.getElementById('upload-primary-label');
+	const progressContainer = document.getElementById('progress-container');
+	const progressLabel = document.getElementById('upload-progress-label');
+
+	// Dummy upload functions
+	const wait = async (miliseconds = 1000) => new Promise(resolve => setTimeout(resolve, miliseconds));
+	const intervalIterate = async (framestep, count, callback) => new Promise(resolve => {
+		let i = 0;
+		const interval = setInterval(() => {
+			callback(i);
+			i++;
+			if (i >= count) {
+				clearInterval(interval);
+				resolve();
+			}
+		}, framestep);
 	});
-	// fileInput.addEventListener('change', () => {
-	// 	console.log(fileInput.value);
-	// 	console.log(fileInput.files);
-	// });
+	const preventDefault = event => event.preventDefault();
+	progressLabel.addEventListener('mousedown', preventDefault);
+
+	fileInput.addEventListener('click', () => mdInput.focus());
+	fileInput.addEventListener('change', async () => {
+		const file = fileInput.files[0];
+		mdInput.readOnly = true;
+		mdInput.addEventListener('mousedown', preventDefault);
+		uploadLabel.addEventListener('mousedown', preventDefault);
+		fileInput.addEventListener('click', preventDefault);
+
+		uploadLabel.innerText = 'uploading...';
+		fileInput.className = 'uploading';
+
+		await intervalIterate(15, 100, i => {
+			progressContainer.style.width = i.toString() + '%';
+		});
+		progressContainer.style.width = '0';
+		uploadLabel.innerText = 'upload image';
+		fileInput.className = '';
+		const imageMD = `![alt_text](${file.name})`;
+		insertTextIntoMdInput(imageMD, true);
+
+		mdInput.removeEventListener('mousedown', preventDefault);
+		uploadLabel.removeEventListener('mousedown', preventDefault);
+		fileInput.removeEventListener('click', preventDefault);
+		mdInput.readOnly = false;
+	});
 
 	// Save to file
+	const saveButtonContainer = document.getElementById('save-button-container');
+	const saveFile = document.getElementById('save');
+	const filenameContainer = document.getElementById('filename-container');
+	const filenameInput = document.getElementById('filename');
+	const filenameLabel = document.getElementById('filename-label');
+
+	filenameInput.value = '';
+	saveFile.addEventListener('click', () => {
+		saveButtonContainer.style.display = 'none';
+		filenameContainer.style.display = 'block';
+		filenameInput.focus();
+	});
+
+	let readyToSave = false;
+
+	const resetLabel = () => {
+		filenameLabel.innerText = 'enter filename';
+		filenameLabel.className = '';
+		readyToSave = false;
+		clearTip();
+	}
+	filenameInput.addEventListener('input', function() {
+		if (this.value == '') resetLabel();
+		else {
+			filenameLabel.innerText = this.value + '.md';
+			setTip('filename');
+			filenameLabel.className = 'hover-highlight';
+			readyToSave = true;
+		}
+	});
+
+	const closeFilename = () => {
+		filenameInput.value = '';
+		resetLabel();
+		filenameContainer.style.display = 'none';
+		saveButtonContainer.style.display = 'block';
+	}
+
+	filenameInput.addEventListener('focusout', function() {
+		console.log('filenameInput focusout');
+		closeFilename();
+	});
+
 	const saveMarkdown = () => {
-		const filename = fileNameInput.value;
+		const filename = filenameInput.value;
 		if (filename == '') return;
 
 		const data = mdInput.value;
 		const blob = new Blob([data], { type: 'text/markdown' });
-		downloadLink.download = filename + '.md';
 
 		const downloadLink = document.createElement('a');
+		downloadLink.download = filename + '.md';
 		const url = window.URL.createObjectURL(blob);
 		downloadLink.href = url;
-		downloadLink.click();
+		// downloadLink.click();
+		console.log('downloaded ' + downloadLink.download);
 		window.URL.revokeObjectURL(url);
-
-		saveMenuContainer.style.display = 'none';
-		saveButton.style.display = 'initial';
+		closeFilename();
 	}
 
-	const saveFile = document.getElementById('save');
-	saveFile.addEventListener('click', () => {
-		console.log('saving');
+	filenameLabel.addEventListener('mousedown', event => {
+		event.preventDefault();
+		if (readyToSave) saveMarkdown();
+	});
+
+	filenameInput.addEventListener('keydown', function(event) {
+		console.log(event.keyCode);
+		if (event.key == 'Enter' && readyToSave) saveMarkdown();
 	});
 });

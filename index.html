@@ -21,7 +21,8 @@
 		<div class="markdown pane flex-column">
 			<div class="flex-between">
 				<h2>Markdown</h2>
-				<p>Press <code>CTRL + ENTER</code> to process</p>
+				<!-- <p id="tip">Press <code>CTRL + ENTER</code> to process</p> -->
+				<p id="tip"></p>
 			</div>
 			<hr>
 			<ul class="tools">
@@ -38,25 +39,23 @@
 					<label for="undo">undo</label>
 				</li>
 				<li class="image-insert">
-					<!-- upload image -->
-					<!-- uploading... -->
-					<!-- click
-					<!-- insert image -->
-					<!-- view images -->
 					<input id="image-insert" type="file" accept="image/jpeg,image/png">
-					<!-- <input id="image-insert" class="uploading" type="file" accept="image/jpeg,image/png"> -->
-					<label for="image-insert">upload image</label>
+					<label id="upload-primary-label" for="image-insert">upload image</label>
 					<div id="progress-container" class="upload-progress">
 						<progress id="progress" value="70" max="100"></progress>
-						<label for="progress">uploading...</label>
+						<label id="upload-progress-label" for="progress">uploading...</label>
 					</div>
 				</li>
-				<li>
+				<li id="save-button-container">
 					<input id="save" type="button">
-					<label for="save">export .md</label>
+					<label id="save-label" for="save">export .md</label>
+				</li>
+				<li id="filename-container">
+					<input id="filename" type="text">
+					<label id="filename-label" for="filename">enter filename</label>
 				</li>
 			</ul>
-			<textarea id="markdown" spellcheck="false" autofocus></textarea>
+			<textarea id="markdown" spellcheck="false" placeholder="Enter markdown here"></textarea>
 			<!-- <div class="images"> -->
 			<!-- 	<h2>Images</h2> -->
 			<!-- </div> -->
@@ -69,8 +68,7 @@
 		<div class="visual-output pane">
 			<h2>Visual Output</h2>
 			<hr>
-			<!-- <div id="visual-output" class="md"></div> -->
-			<div id="visual-output" class="woolley-md"></div>
+			<div id="visual-output" class="md"></div>
 		</div>
 	</div>
 </body>
